@@ -1,23 +1,36 @@
 export default {
-  async fetch(request) {
-    const targetUrl = "https://script.google.com/macros/s/AKfycbyJ9Q7Bw17IiKo982nX08FeIsPMieDdXGxm-WKNbfK__c3rj99c2qCToMlIenD-Daw7Ow/exec";
+  async fetch(request, env, ctx) {
+    const { searchParams } = new URL(request.url);
+    const userMessage = searchParams.get("pergunta") || "Olá!";
 
-    const newRequest = new Request(targetUrl, {
-      method: request.method,
-      headers: request.headers,
-      body: request.body,
-      redirect: "follow"
-    });
+    const resposta = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${env.AIzaSyDRXd6owlK8Wim7l1Lls-vc-5UbcZIrgmU}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [{ text: userMessage }],
+            },
+          ],
+        }),
+      }
+    );
 
-    const response = await fetch(newRequest);
-    const headers = new Headers(response.headers);
-    headers.set("Access-Control-Allow-Origin", "*");
-    headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    headers.set("Access-Control-Allow-Headers", "Content-Type");
+    const data = await resposta.json();
 
-    return new Response(await response.text(), {
-      status: response.status,
-      headers
-    });
-  }
-}
+    try {
+      const texto = data.candidates[0].content.parts[0].text;
+      return new Response(JSON.stringify({ resposta: texto }), {
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (e) {
+      return new Response(JSON.stringify({ resposta: "Erro na resposta da API Gemini." }), {
+        headers: { "Content-Type": "application/json" },
+        status: 500,
+      });
+    }
+  },
+};
+
