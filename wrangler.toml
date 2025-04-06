@@ -1,9 +1,8 @@
 name = "gemini-proxy"
-type = "javascript"
-
-account_id = "a48aaee276747aedd3245fa75bf7b493"
-workers_dev = true
+main = "index.js"
 compatibility_date = "2024-04-06"
+workers_dev = true
+account_id = "a48aaee276747aedd3245fa75bf7b493"
 
 [vars]
 GEMINI_API_KEY = "AIzaSyDRXd6owlK8Wim7l1Lls-vc-5UbcZIrgmU"
