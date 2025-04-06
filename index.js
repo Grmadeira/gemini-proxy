@@ -4,7 +4,7 @@ export default {
     const userMessage = searchParams.get("pergunta") || "Olá!";
 
     const resposta = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${env.AIzaSyDRXd6owlK8Wim7l1Lls-vc-5UbcZIrgmU}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${env.GEMINI_API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -33,4 +33,3 @@ export default {
     }
   },
 };
-
